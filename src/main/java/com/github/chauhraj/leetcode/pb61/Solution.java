@@ -35,6 +35,9 @@ public class Solution {
     };
 
     private class start implements State {
+
+
+
         public State nextState() {
             return states[NO];
         }

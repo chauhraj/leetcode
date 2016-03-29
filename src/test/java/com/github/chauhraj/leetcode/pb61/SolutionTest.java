@@ -14,12 +14,12 @@ import static org.junit.Assert.*;
  * Created by chauhraj on 3/18/16.
  */
 @RunWith(Parameterized.class)
-public class PB61Test {
+public class SolutionTest {
 
     private final String input;
     private final boolean result;
 
-    public PB61Test(String input, boolean result) {
+    public SolutionTest(String input, boolean result) {
         this.input = input;
         this.result = result;
     }

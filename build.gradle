@@ -35,10 +35,73 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+task newProblem(description: "Creates Solution class and Test for a given Leetcode Problem Id") {
+    println "Creating Solution Class for $leetId"
+
+    def pkgName = "${project.group}.leetcode.pb${leetId}"
+    def path = pkgName.replace(".", "/")
+    def source = file("src/main/java/$path/Solution.java")
+    def testSource = file("src/test/java/$path/SolutionTest.java")
+    def problemClass = """
+package ${project.group}.leetcode.pb${leetId};
+
+public class Solution {
+
+}
+        """
+    source.getParentFile().mkdirs()
+    FileWriter w1 = new FileWriter(source)
+    w1.write(problemClass)
+    w1.close()
+
+    println "Creating File $source successfully"
+
+    def testClass = """
+package ${project.group}.leetcode.pb${leetId};
+
+import static org.hamcrest.CoreMatchers.*;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
+
+@RunsWith(Parameterized.class)
+public class SolutionTest {
+    private <TYPE> input;
+    private <TYPE> expected;
+    public SolutionTest(<TYPE> input, <TYPE> expected) {
+        this.input = input;
+        this.expected = expected;
+    }
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+        });
+    }
+
+    @Test
+    public void executeTest() {
+        Solution solution = new Solution();
+    }
+
+}
+        """
+    testSource.getParentFile().mkdirs()
+    FileWriter w2 = new FileWriter(testSource)
+    w2.write(testClass)
+    w2.close()
+   println "Created test class file $testSource successfully"
 }
 
 dependencies {
