@@ -22,6 +22,7 @@ public class SolutionTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
+                {"abxyzbstuvcdaefbcbb", 13},
                 {"abbcdaefbcbb", 6},
                 {"", 0},
                 {"bbbbb", 1},
