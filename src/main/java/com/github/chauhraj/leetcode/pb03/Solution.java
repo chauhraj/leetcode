@@ -1,33 +1,23 @@
 package com.github.chauhraj.leetcode.pb03;
 
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
 
-    private Map<Character, Integer> map = new HashMap<>();
-
     int lengthOfLongestSubstring(String s) {
-        int max = 0, startOfRun = 0;
-        for(int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if(map.containsKey(c)) {
-                int lastIndex = map.put(c, i);
-                if(startOfRun <= lastIndex) {
-                    if((i - startOfRun) > max) {
-                        max = (i - startOfRun);
-                    }
-                    startOfRun = lastIndex + 1;
+        int[] map = new int[128];
+        int i = 1, max = 0, startOfRun = 1;
+        for(char c : s.toCharArray()) {
+            if(startOfRun <= map[c]) {
+                if((i - startOfRun) > max) {
+                    max = (i - startOfRun);
                 }
-            } else {
-                map.put(c, i);
+                startOfRun = map[c] + 1;
             }
+            map[c] = i++;
         }
-        if(s.length() - startOfRun > max) {
-            max = s.length() - startOfRun;
+        if((s.length() - startOfRun + 1) > max) {
+            max = s.length() - startOfRun + 1;
         }
         return max;
     }
 
 }
-        
