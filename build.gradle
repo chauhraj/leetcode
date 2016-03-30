@@ -42,7 +42,6 @@ repositories {
 }
 
 task newProblem(description: "Creates Solution class and Test for a given Leetcode Problem Id") {
-    println "Creating Solution Class for $leetId"
 
     def pkgName = "${project.group}.leetcode.pb${leetId}"
     def path = pkgName.replace(".", "/")
@@ -52,7 +51,10 @@ task newProblem(description: "Creates Solution class and Test for a given Leetco
 package ${project.group}.leetcode.pb${leetId};
 
 public class Solution {
-
+    public $outputType $method($inputType input) {
+         $outputType result ;
+         return result;
+    }
 }
         """
     source.getParentFile().mkdirs()
@@ -75,11 +77,11 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-@RunsWith(Parameterized.class)
+@RunWith(Parameterized.class)
 public class SolutionTest {
-    private <TYPE> input;
-    private <TYPE> expected;
-    public SolutionTest(<TYPE> input, <TYPE> expected) {
+    private $inputType input;
+    private $outputType expected;
+    public SolutionTest($inputType input, $outputType expected) {
         this.input = input;
         this.expected = expected;
     }
@@ -91,8 +93,9 @@ public class SolutionTest {
     }
 
     @Test
-    public void executeTest() {
+    public void execute${method}Test() {
         Solution solution = new Solution();
+        assertThat(solution.$method(input), is(expected));
     }
 
 }
