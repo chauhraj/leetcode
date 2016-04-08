@@ -92,22 +92,37 @@ class Solution {
                         valueAt(array1, keyIndex + (noOfElementsMoreToConsider - 1)));
             }
         } else {
+            int nElementsBefore = abs(noOfElementsMoreToConsider);
             if(isEven(totalSize)) {
                 int f, s;
                 int v1, v2;
-                int firstIndex = totalSize / 2;
-                int secondIndex = firstIndex + 1;
-                if( (v1 = valueAt(array1, keyIndex + noOfElementsMoreToConsider)) > (v2 = valueAt(array2, l + noOfElementsMoreToConsider))) {
-                    f = v1;
-                    s = max(v2, valueAt(array1, keyIndex + (noOfElementsMoreToConsider - 1)));
+                if (l == 0) {
+                    s = valueAt(array1, keyIndex - nElementsBefore);
+                    f = valueAt(array1, keyIndex - nElementsBefore - 1);
+                    return 0.5 * (f + s);
                 } else {
-                    f = v2;
-                    s = max(v1, valueAt(array2, l + (noOfElementsMoreToConsider - 1)));
+                    nElementsBefore--;
+                    int cIdx1 = keyIndex - 1, cIdx2 = l - 1;
+                    while(nElementsBefore > 0) {
+                        nElementsBefore--;
+                        if( (valueAt(array1, cIdx1)) > (valueAt(array2, cIdx2))) {
+                            cIdx1--;
+                        } else {
+                            cIdx2--;
+                        }
+                    }
+                    if( (v1 = valueAt(array1, cIdx1)) > (v2 = valueAt(array2, cIdx2))) {
+                        f = v1;
+                        s = max(valueAt(array1, cIdx1 - 1), valueAt(array2, cIdx2));
+                    } else {
+                        f = v2;
+                        s = max(valueAt(array2, cIdx2 - 1), valueAt(array1, cIdx1));
+                    }
+                    return (f + s) * 0.5;
                 }
-                return (f + s) * 0.5;
             } else {
                 if(l == 0) {
-                    return valueAt(array1, keyIndex - abs(noOfElementsMoreToConsider));
+                    return valueAt(array1, keyIndex - nElementsBefore);
                 } else {
                     int f, s;
                     int v1, v2;

@@ -1,6 +1,7 @@
 
 package com.github.chauhraj.leetcode.pb04;
 
+import static java.lang.Double.NaN;
 import static org.hamcrest.CoreMatchers.*;
 
 import org.apache.commons.math3.stat.StatUtils;
@@ -16,11 +17,15 @@ import static org.junit.Assert.*;
 public class SolutionTest {
     private final int[] array1;
     private final int[] array2;
+    private final double first;
+    private final double second;
     private double expected;
-    public SolutionTest(int[] array1, int[] array2, double expected) {
+    public SolutionTest(int[] array1, int[] array2, double expected, double f, double s) {
         this.array1 = array1;
         this.array2 = array2;
         this.expected = expected;
+        this.first = f;
+        this.second = s;
     }
 
     @Parameterized.Parameters
@@ -36,7 +41,7 @@ public class SolutionTest {
     @Test
     public void executeMedianSortedArraysTest() {
         Solution solution = new Solution();
-        String msg = String.format("Failed for arrays \n A: %s, \n B: %s", Arrays.toString(array1), Arrays.toString(array2));
+        String msg = String.format("Failed for arrays \n A: %s, \n B: %s \n with median elements(%s, %s)\n", Arrays.toString(array1), Arrays.toString(array2), first, second);
         assertThat(msg, solution.findMedianSortedArrays(array1, array2), is(expected));
     }
 
@@ -50,24 +55,25 @@ public class SolutionTest {
     private static Object[] createData() {
         int[] a1 = generateArray();
         int[] a2 = generateArray();
-        List<Integer> f = new ArrayList<>();
-        for(int n : a1) f.add(n); for(int n : a2) f.add(n);
-        double[] f0 = toArray0(f);
+        List<Integer> f2 = new ArrayList<>();
+        for(int n : a1) f2.add(n); for(int n : a2) f2.add(n);
+        double[] f0 = toArray0(f2);
         Arrays.sort(f0);
         int size = a1.length + a2.length, index = size / 2;
-        double expected = Double.NaN;
+        double expected = NaN;
+        double f = NaN, s = NaN;
         if (size > 0) {
             try {
                 if(size % 2 == 0) {
-                    expected = (f0[index - 1] + f0[index]) * 0.5;
+                    expected = ((f = f0[index - 1]) + (s = f0[index])) * 0.5;
                 } else {
-                    expected = f0[index];
+                    expected = (f = f0[index]);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
                 throw e;
             }
         }
-        return new Object[] {a1, a2, expected};
+        return new Object[] {a1, a2, expected, f, s};
     }
     private static int[] generateArray() {
         int size = arraySizeRNG.nextInt(10);
