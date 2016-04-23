@@ -2,190 +2,58 @@ package com.github.chauhraj.leetcode.pb04;
 
 import static java.lang.Math.*;
 
-import java.util.Arrays;
-
 class Solution {
 
-    double findMedianSortedArrays(int[] array1, int[] array2) {
-        if(array1.length == 0 && array2.length == 0) {
+    double findMedianSortedArrays(int[] A, int[] B) {
+        int total = (A.length + B.length + 1) / 2;
+        if(A.length == 0 && B.length == 0) {
             return Double.NaN;
-        }
-        if(array1.length == 0) {
-            int mid = array2.length/2;
-            if(isEven(array2.length)) {
-                return (array2[mid] + array2[mid - 1]) * 0.5;
-            } else {
-                return array2[mid];
-            }
-        }
-        if(array2.length == 0) {
-            int mid = array1.length/2;
-            if(isEven(array1.length)) {
-                return (array1[mid] + array1[mid - 1]) * 0.5;
-            } else {
-                return array1[mid];
-            }
-        }
-        int midOfA = valueAtMid(array1, 0, array1.length - 1);
-        int midOfB = valueAtMid(array2, 0, array2.length - 1);
-        if(midOfA == midOfB) {
-            return midOfA;
-        } else if(midOfA < midOfB) {
-            return findMedian(array1, array2, midOfB);
+        } else if(A.length > B.length) {
+            return findMedian(B, A, 0, B.length, total);
         } else {
-            return findMedian(array2, array1, midOfA);
+            return findMedian(A, B, 0, A.length, total);
         }
     }
 
-    private double findMedian(int[] array1, int[] array2, int mid) {
-        int totalSize = array1.length + array2.length;
-        int midIndexA = midIndex(0, array1.length - 1);
-        int midIndexB = midIndex(0, array2.length - 1);
-        int keyIndex = binarySearch(array1, midIndexA, array1.length, mid)  - 1;
-        int key = array1[keyIndex];
-        int l = binarySearch(array2, 0, midIndexB, key); // it is the index of key in array2
-        int totalElementsBeforeKey = keyIndex + (l);
-        int noOfElementsBeforeMedian = (totalSize / 2);
-        int noOfElementsMoreToConsider = (noOfElementsBeforeMedian - totalElementsBeforeKey);
-        if(noOfElementsMoreToConsider == 0) {
-            if(isEven(totalSize)) {
-                int second = Math.max( valueAt(array1, keyIndex - 1),
-                                       valueAt(array2, (l - 1)));
-                return (key + second) * 0.5;
-            } else {
-                return key;
-            }
-        } else if(noOfElementsMoreToConsider == 1) {
-            if(isEven(totalSize)) {
-                int second = Math.min( valueAt(array1, keyIndex + 1),
-                                       valueAt(array2, l));
-                return (key + second) * 0.5;
-            } else {
-                return Math.min( valueAt(array1, keyIndex + 1),
-                                 valueAt(array2, l));
-            }
-        }  else if(noOfElementsMoreToConsider == -1) {
-            if(isEven(totalSize)) {
-                int f, s;
-                int v1, v2;
-                if( (v1 = valueAt(array1, keyIndex - 1)) > (v2 = valueAt(array2, l - 1))) {
-                    f = v1;
-                    s = max(v2, valueAt(array1, keyIndex - 2));
-                } else {
-                    f = v2;
-                    s = max(v1, valueAt(array2, l - 2));
-                }
-                return (f + s) * 0.5;
-            } else {
-                return Math.max( valueAt(array1, keyIndex - 1),
-                                 valueAt(array2, l - 1));
-            }
-        } else if(noOfElementsMoreToConsider >= 0){
-            if(isEven(totalSize)) {
-                int newIndex = l - 1 + (noOfElementsMoreToConsider - 1);
-                int first = array2[newIndex];
-                int second = Math.min( valueAt(array2, newIndex + 1),
-                                       valueAt(array1, keyIndex + 1));
-                return (first + second) * 0.5;
-            } else {
-                return Math.min( valueAt(array2, l + (noOfElementsMoreToConsider - 1)),
-                        valueAt(array1, keyIndex + (noOfElementsMoreToConsider - 1)));
-            }
+    private double findMedian(int[] A, int[] B, int l, int r, int total) {
+        int i = (l + r) / 2;
+        int j = total - i;
+        int n = B.length;
+        int m = A.length;
+        if(j > 0 && i < m && B[j - 1] > A[i]) {
+            return findMedian(A, B, i + 1, r, total);
         } else {
-            int nElementsBefore = abs(noOfElementsMoreToConsider);
-            if(isEven(totalSize)) {
-                int f, s;
-                int v1, v2;
-                if (l == 0) {
-                    s = valueAt(array1, keyIndex - nElementsBefore);
-                    f = valueAt(array1, keyIndex - nElementsBefore - 1);
-                    return 0.5 * (f + s);
+            if(i > 0 && j < n && A[i - 1] > B[j]) {
+                return findMedian(A, B, l, i, total);
+            } else {
+                int maxLeft;
+                if(i == 0) {
+                    maxLeft = B[j -1];
+                } else if(j == 0) {
+                    maxLeft = A[i -1];
                 } else {
-                    nElementsBefore--;
-                    int cIdx1 = keyIndex - 1, cIdx2 = l - 1;
-                    while(nElementsBefore > 0) {
-                        nElementsBefore--;
-                        if( (valueAt(array1, cIdx1)) > (valueAt(array2, cIdx2))) {
-                            cIdx1--;
-                        } else {
-                            cIdx2--;
-                        }
-                    }
-                    if( (v1 = valueAt(array1, cIdx1)) > (v2 = valueAt(array2, cIdx2))) {
-                        f = v1;
-                        s = max(valueAt(array1, cIdx1 - 1), valueAt(array2, cIdx2));
+                    maxLeft = max(A[i -1], B[j -1]);
+                }
+
+                if((m + n) % 2 == 1) {
+                    System.out.printf("(%s)\n", maxLeft);
+                    return maxLeft;
+                } else {
+                    int minRight;
+                    if(i == m) {
+                        minRight = B[j];
+                    } else if(j == n) {
+                        minRight = A[i];
                     } else {
-                        f = v2;
-                        s = max(valueAt(array2, cIdx2 - 1), valueAt(array1, cIdx1));
+                        minRight = min(A[i], B[j]);
                     }
-                    return (f + s) * 0.5;
+                    System.out.printf("(%s, %s)\n", maxLeft, minRight);
+                    return (maxLeft + minRight) * 0.5;
                 }
-            } else {
-                if(l == 0) {
-                    return valueAt(array1, keyIndex - nElementsBefore);
-                } else {
-                    int f, s;
-                    int v1, v2;
-                    int index1 = (keyIndex - 1), index2 = l - 1;
-                    while(totalElementsBeforeKey > noOfElementsBeforeMedian + 1) {
-                        totalElementsBeforeKey--;
-                        if ((v1 = valueAt(array1, index1)) >= (v2 = valueAt(array2, index2))) {
-                            index1--;
-                        } else {
-                            index2--;
-                        }
-                    }
-                    return max(valueAt(array1, (index1)), valueAt(array2, index2));
-                }
+
             }
         }
-    }
 
-    private int valueAt(int[] array, int index) {
-        if(index >= array.length) {
-            return Integer.MAX_VALUE;
-        } else if(index < 0) {
-            return Integer.MIN_VALUE;
-        } else {
-            return array[index];
-        }
-    }
-
-    private static boolean isOdd(int n) {
-        return !isEven(n);
-    }
-    private static boolean isEven(int n) {
-        return (n & 1) == 0;
-    }
-
-    private int binarySearch(int[] array1, int fromIndex, int toIndex, int key) {
-        int k;
-        int index = Arrays.binarySearch(array1, fromIndex, toIndex, key);
-        if(index < 0) {
-            if(index == -1) {
-                k = 0;
-            } else {
-                int insertionIndex = -(index + 1);
-                k = insertionIndex;
-            }
-        } else {
-            k = index;
-        }
-        return k;
-    }
-
-    int valueAtMid(int[] array, int start, int end) {
-        int midIndex = midIndex(start, end);
-        return array[midIndex];
-    }
-
-    private int midIndex(int start, int end) {
-        int numberOfElements = (end - start + 1);
-        if((numberOfElements & 1) == 1) {
-            return start + (numberOfElements >> 1);
-        } else {
-            return start + (numberOfElements >> 1) - 1;
-        }
     }
 }
         

@@ -4,7 +4,6 @@ package com.github.chauhraj.leetcode.pb04;
 import static java.lang.Double.NaN;
 import static org.hamcrest.CoreMatchers.*;
 
-import org.apache.commons.math3.stat.StatUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -15,6 +14,9 @@ import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class SolutionTest {
+    private static final int MAX_ARRAY_SIZE = 50;
+    private static final int MAX_ARRAY_ELEMENT = 1000;
+    private static final int MAX_ITERATIONS = 1000;
     private final int[] array1;
     private final int[] array2;
     private final double first;
@@ -31,7 +33,7 @@ public class SolutionTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         List<Object[]> list = new LinkedList<>();
-        int examples = 1000;
+        int examples = MAX_ITERATIONS;
         for(int i = 1; i <= examples; i++) {
             list.add(createData());
         }
@@ -70,16 +72,16 @@ public class SolutionTest {
                     expected = (f = f0[index]);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
-                throw e;
+                e.printStackTrace();
             }
         }
         return new Object[] {a1, a2, expected, f, s};
     }
     private static int[] generateArray() {
-        int size = arraySizeRNG.nextInt(10);
+        int size = arraySizeRNG.nextInt(MAX_ARRAY_SIZE);
         Set<Integer> array = new HashSet<>();
         while(array.size() < size) {
-            array.add(arrayRNG.nextInt(500));
+            array.add(arrayRNG.nextInt(MAX_ARRAY_ELEMENT));
         }
         return toArray(array);
     }
