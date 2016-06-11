@@ -23,6 +23,7 @@ public class SolutionTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
+                {new String[] {"flower","flow","flight"}, "fl"},
                 {new String[] {"aa", "ab"}, "a"},
                 {new String[] {"Satya", "Satyam", "Satyamev"}, "Satya"},
                 {new String[] {"Satya", "Satyam", "", "Satyamev"}, ""}
