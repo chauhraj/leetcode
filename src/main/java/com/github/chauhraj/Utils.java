@@ -11,12 +11,16 @@ public class Utils {
         return Arrays.asList(al);
     }
 
-    public static List<Integer> l(Integer... nos) {
+    public static <T> List<T> l(T... nos) {
         return Arrays.asList(nos);
     }
 
     public static int[] a(int... nos) {
         return nos;
+    }
+
+    public static int[][] as(int[]... a) {
+        return a;
     }
 
 }
