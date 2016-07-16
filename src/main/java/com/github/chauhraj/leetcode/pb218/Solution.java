@@ -6,13 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Solution {
-    private static <T> List<T> l(T... nos) {
-        return Arrays.asList(nos);
-    }
-
-    private static int[] a(int... nos) {
-        return nos;
-    }
 
     public List<int[]> getSkyline(int[][] buildings) {
         if (buildings.length == 0) {
@@ -24,7 +17,7 @@ public class Solution {
     private List<int[]> getSkyline(int[][] buildings, int l, int r) {
         if (l == r) {
             int[] bldg = buildings[l];
-            return l(a(bldg[0], bldg[2]), a(bldg[1], 0));
+            return Arrays.asList(new int[]{bldg[0], bldg[2]}, new int[]{bldg[1], 0});
         }
         int m = l + (r - l) / 2;
         List<int[]> left = getSkyline(buildings, l, m);
@@ -48,9 +41,9 @@ public class Solution {
                         if (skyLine1 >= currentSkyline && leftBldg[1] < skyLine1) {
                             skyLine1 = leftBldg[1];
                             int prevSkyLine = currentSkyline;
-                            currentSkyline = Integer.max(skyLine1, skyLine2);
+                            currentSkyline = skyLine1 > skyLine2 ? skyLine1 : skyLine2;
                             if (prevSkyLine != currentSkyline) {
-                                results.add(a(leftBldg[0], currentSkyline));
+                                results.add(new int[]{leftBldg[0], currentSkyline});
                             }
                         } else {
                             skyLine1 = leftBldg[1];
@@ -61,13 +54,13 @@ public class Solution {
                     skyLine1 = leftBldg[1];
                     skyLine2 = rightBldg[1];
                     int prevSkyLine = currentSkyline;
-                    currentSkyline = Integer.max(skyLine1, skyLine2);
+                    currentSkyline = skyLine1 > skyLine2 ? skyLine1 : skyLine2;
                     if (prevSkyLine < currentSkyline && leftBldg[1] >= currentSkyline) {
                         results.add(leftBldg);
                     } else if (prevSkyLine < currentSkyline && rightBldg[1] >= currentSkyline) {
                         results.add(rightBldg);
                     } else if (prevSkyLine > currentSkyline) {
-                        results.add(a(leftBldg[0], currentSkyline));
+                        results.add(new int[]{leftBldg[0], currentSkyline});
                     } else if(leftBldg[1] == 0 && rightBldg[1] == 0) {
                         results.add(leftBldg);
                     }
@@ -81,9 +74,9 @@ public class Solution {
                         if (skyLine2 >= currentSkyline && rightBldg[1] < skyLine2) {
                             skyLine2 = rightBldg[1];
                             int prevSkyLine = currentSkyline;
-                            currentSkyline = Integer.max(skyLine1, skyLine2);
+                            currentSkyline = skyLine1 > skyLine2 ? skyLine1 : skyLine2;
                             if (prevSkyLine != currentSkyline) {
-                                results.add(a(rightBldg[0], currentSkyline));
+                                results.add(new int[]{rightBldg[0], currentSkyline});
                             }
                         } else {
                             skyLine2 = rightBldg[1];
@@ -91,7 +84,7 @@ public class Solution {
                     }
                     r++;
                 }
-                currentSkyline = Integer.max(skyLine1, skyLine2);
+                currentSkyline = skyLine1 > skyLine2 ? skyLine1 : skyLine2;
             } else if (l < first.size()) {
                 results.add(first.get(l++));
             } else if (r < second.size()) {
