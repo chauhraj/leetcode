@@ -44,14 +44,14 @@ repositories {
 task newProblem(description: "Creates Solution class and Test for a given Leetcode Problem Id") {
 
     doLast {
-        def pkgName = "${project.group}.leetcode.pb${leetId}"
+        def pkgName = "${project.group}.leetcode"
         def path = pkgName.replace(".", "/")
-        def source = file("src/main/java/$path/Solution.java")
-        def testSource = file("src/test/java/$path/SolutionTest.java")
+        def source = file("src/main/java/$path/Pb${leetId}Solution.java")
+        def testSource = file("src/test/java/$path/Pb${leetId}SolutionTest.java")
         def problemClass = """
-package ${project.group}.leetcode.pb${leetId};
+package ${project.group}.leetcode;
 
-public class Solution {
+public class Pb${leetId}Solution {
     public $outputType $method($inputType input) {
          $outputType result ;
          return result;
@@ -66,7 +66,7 @@ public class Solution {
         println "Creating File $source successfully"
 
         def testClass = """
-package ${project.group}.leetcode.pb${leetId};
+package ${project.group}.leetcode;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -79,10 +79,10 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
-public class SolutionTest {
+public class Pb${leetId}SolutionTest {
     private $inputType input;
     private $outputType expected;
-    public SolutionTest($inputType input, $outputType expected) {
+    public Pb${leetId}SolutionTest($inputType input, $outputType expected) {
         this.input = input;
         this.expected = expected;
     }
@@ -95,7 +95,7 @@ public class SolutionTest {
 
     @Test
     public void execute${method}Test() {
-        Solution solution = new Solution();
+        Pb${leetId}Solution solution = new Pb${leetId}Solution();
         assertThat(solution.$method(input), is(expected));
     }
 

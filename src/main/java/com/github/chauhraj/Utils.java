@@ -19,4 +19,26 @@ public class Utils {
         return nos;
     }
 
+    public static String deepToString(boolean[][] a) {
+        StringBuilder b = new StringBuilder();
+        b.append("[").append(System.getProperty("line.separator"));
+        int maxIdx = a.length - 1;
+        for(int i = 0; i <= maxIdx - 1; i++) {
+            b.append("[");
+            int maxInIdx = a[i].length - 1;
+            for(int j = 0; j <= maxInIdx - 1; j++) {
+                b.append(a[i][j] == true ? 'T' : 'F').append(',');
+            }
+            b.append(a[i][maxInIdx] == true ? 'T' : 'F').append(']').append(System.getProperty("line.separator"));
+        }
+        b.append("[");
+        int maxInIdx = a[maxIdx].length - 1;
+        for(int j = 0; j <= maxInIdx - 1; j++) {
+            b.append(a[maxIdx][j] == true ? 'T' : 'F').append(',');
+        }
+        b.append(a[maxIdx][maxInIdx] == true ? 'T' : 'F').append(']').append(System.getProperty("line.separator")).append("]");
+        return b.toString();
+    }
+
+
 }
